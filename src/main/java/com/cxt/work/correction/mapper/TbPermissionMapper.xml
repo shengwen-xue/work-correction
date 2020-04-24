@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cxt.work.correction.mapper.TbPermissionMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.cxt.work.correction.pojo.TbPermission">
+        <id column="id" property="id" />
+        <result column="permission_name" property="permissionName" />
+        <result column="permission_specification" property="permissionSpecification" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_by" property="createBy" />
+        <result column="update_by" property="updateBy" />
+    </resultMap>
+
+    <select id="selectStudentPermission" resultType="com.cxt.work.correction.entity.dto.AssignAuthorityDTO">
+        SELECT
+          tb_permission.id,
+          tb_permission.permission_name
+        FROM
+	      tb_role
+        LEFT JOIN tb_role_permission ON tb_role.id = tb_role_permission.role_id
+        LEFT JOIN tb_permission ON tb_role_permission.permission_id = tb_permission.id
+        WHERE
+          tb_role.id = 3
+    </select>
+
+    <select id="selectTeacherPermission" resultType="com.cxt.work.correction.entity.dto.AssignAuthorityDTO">
+        SELECT
+          tb_permission.id,
+          tb_permission.permission_name
+        FROM
+	      tb_role
+        LEFT JOIN tb_role_permission ON tb_role.id = tb_role_permission.role_id
+        LEFT JOIN tb_permission ON tb_role_permission.permission_id = tb_permission.id
+        WHERE
+          tb_role.id = 2
+    </select>
+</mapper>

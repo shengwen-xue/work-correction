@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cxt.work.correction.mapper.TbUserInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.cxt.work.correction.pojo.TbUserInfo">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="phone_number" property="phoneNumber" />
+        <result column="e_mail" property="eMail" />
+        <result column="student_number" property="studentNumber" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_by" property="createBy" />
+        <result column="update_by" property="updateBy" />
+    </resultMap>
+
+    <select id="findUserInfoById" resultType="com.cxt.work.correction.pojo.TbUserInfo" parameterType="long">
+        SELECT * FROM tb_user_info WHERE tb_user_info.user_id = #{id}
+    </select>
+
+    <delete id="deleteAll" parameterType="java.lang.String">
+        DELETE FROM tb_user_info WHERE tb_user_info.user_id IN
+        <foreach collection="list" item="userId" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </delete>
+
+    <select id="selectUserInfoByUserId" parameterType="long" resultType="com.cxt.work.correction.pojo.TbUserInfo">
+        SELECT * FROM tb_user_info WHERE tb_user_info.user_id = #{id}
+    </select>
+</mapper>

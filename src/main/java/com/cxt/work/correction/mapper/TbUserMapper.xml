@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cxt.work.correction.mapper.TbUserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.cxt.work.correction.pojo.TbUser">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="password" property="password" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_by" property="createBy" />
+        <result column="update_by" property="updateBy" />
+    </resultMap>
+
+    <select id="getUsers" resultType="map" parameterType="string">
+        SELECT
+            tb_user.id,
+            tb_user.`name`,
+            tb_user_info.phone_number,
+            tb_user_info.e_mail,
+            tb_user_info.student_number,
+            tb_role.role_name
+        FROM
+            tb_user
+        LEFT JOIN tb_user_info ON tb_user.id = tb_user_info.user_id
+        LEFT JOIN tb_user_role ON tb_user.id = tb_user_role.user_id
+        LEFT JOIN tb_role ON tb_role.id = tb_user_role.role_id
+        <where>
+            <if test="name != null and name != ''">
+                tb_user.`name` LIKE CONCAT('%',#{name},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectUserById" resultType="com.cxt.work.correction.entity.bo.UserBO" parameterType="long">
+        SELECT
+            tb_user.id,
+            tb_user.`name`,
+            tb_user_info.phone_number,
+            tb_user_info.e_mail,
+            tb_user_info.student_number,
+            tb_user.create_time,
+            tb_user.update_time,
+            tb_role.role_name
+        FROM
+            tb_user
+        LEFT JOIN tb_user_info ON tb_user.id = tb_user_info.user_id
+        LEFT JOIN tb_user_role ON tb_user.id = tb_user_role.user_id
+        LEFT JOIN tb_role ON tb_role.id = tb_user_role.role_id
+        WHERE tb_user.id = #{id}
+    </select>
+
+    <select id="getTeachers" resultType="tbUser">
+        SELECT
+            tb_user.id,
+            tb_user.`name`,
+            tb_user.create_time,
+            tb_user.update_time
+        FROM
+            tb_user
+        LEFT JOIN tb_user_role ON tb_user.id = tb_user_role.user_id
+        WHERE tb_user_role.role_id = 2
+    </select>
+
+    <select id="getStudents" resultType="tbUser">
+        SELECT
+            tb_user.id,
+            tb_user.`name`,
+            tb_user.create_time,
+            tb_user.update_time
+        FROM
+            tb_user
+        LEFT JOIN tb_user_role ON tb_user.id = tb_user_role.user_id
+        WHERE tb_user_role.role_id = 3
+    </select>
+
+    <select id="findUserById" resultType="com.cxt.work.correction.entity.bo.UserUpdateBO" parameterType="long">
+        SELECT
+            tb_user.id,
+            tb_user.`name`,
+            tb_user.`password`,
+            tb_user_info.phone_number,
+            tb_user_info.e_mail,
+            tb_user_info.student_number
+        FROM
+	        tb_user
+	    LEFT JOIN tb_user_info ON tb_user.id = tb_user_info.user_id
+        WHERE tb_user.id = #{id}
+    </select>
+
+    <delete id="deleteAll" parameterType="java.lang.String">
+        DELETE FROM tb_user WHERE tb_user.id IN
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
